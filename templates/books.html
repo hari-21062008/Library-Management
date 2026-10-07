@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Books{% endblock %}
+{% block content %}
+<div class="head"><h1>Books</h1><a class="btn" href="{{ url_for('add_book') }}">Add book</a></div>
+<form class="search" method="get"><input name="q" value="{{ q }}" placeholder="Search title, author, ISBN or category"><button class="btn ghost">Search</button></form>
+{% if books %}
+<table>
+  <tr><th>Title</th><th>Author</th><th>ISBN</th><th>Category</th><th>Available</th><th></th></tr>
+  {% for b in books %}
+  <tr>
+    <td>{{ b.title }}</td><td>{{ b.author }}</td><td>{{ b.isbn }}</td><td>{{ b.category }}</td>
+    <td><span class="tag {{ 'none' if b.available == 0 }}">{{ b.available }} of {{ b.copies }}</span></td>
+    <td class="acts">
+      <a href="{{ url_for('edit_book', id=b.id) }}">Edit</a>
+      <form method="post" action="{{ url_for('delete_book', id=b.id) }}" onsubmit="return confirm('Delete this book?')"><button class="link danger">Delete</button></form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}<p class="empty">No books found. Add the first one.</p>{% endif %}
+{% endblock %}

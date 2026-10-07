@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Issue a book{% endblock %}
+{% block content %}
+<h1>Issue a book</h1>
+{% if books and members %}
+<form method="post" class="card form">
+  <label>Book
+    <select name="book_id" required>
+      {% for b in books %}<option value="{{ b.id }}">{{ b.title }} — {{ b.author }} ({{ b.available }} left)</option>{% endfor %}
+    </select></label>
+  <label>Member
+    <select name="member_id" required>
+      {% for m in members %}<option value="{{ m.id }}">{{ m.name }}</option>{% endfor %}
+    </select></label>
+  <div class="bar"><button class="btn">Issue book</button><a class="btn ghost" href="{{ url_for('loans') }}">Cancel</a></div>
+</form>
+{% else %}<p class="empty">You need at least one available book and one member before issuing.</p>{% endif %}
+{% endblock %}

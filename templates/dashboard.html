@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Today at the desk</h1>
+<div class="stats">
+  <div class="stat"><b>{{ stats.titles }}</b> titles</div>
+  <div class="stat"><b>{{ stats.members }}</b> members</div>
+  <div class="stat"><b>{{ stats.out }}</b> on loan</div>
+  <div class="stat {{ 'warn' if stats.overdue }}"><b>{{ stats.overdue }}</b> overdue</div>
+</div>
+<div class="bar">
+  <a class="btn" href="{{ url_for('issue') }}">Issue a book</a>
+  <a class="btn ghost" href="{{ url_for('add_book') }}">Add book</a>
+  <a class="btn ghost" href="{{ url_for('add_member') }}">Add member</a>
+</div>
+<h2>Overdue loans</h2>
+{% if overdue %}
+<table>
+  <tr><th>Book</th><th>Member</th><th>Due</th><th></th></tr>
+  {% for l in overdue %}
+  <tr><td>{{ l.title }}</td><td>{{ l.name }}</td><td>{{ l.due }}</td>
+    <td><form method="post" action="{{ url_for('return_book', id=l.id) }}"><button class="btn small">Return</button></form></td></tr>
+  {% endfor %}
+</table>
+{% else %}<p class="empty">Nothing is overdue.</p>{% endif %}
+{% endblock %}

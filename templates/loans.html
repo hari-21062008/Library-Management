@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Loans{% endblock %}
+{% block content %}
+<div class="head"><h1>Loans</h1><a class="btn" href="{{ url_for('issue') }}">Issue a book</a></div>
+<div class="bar">
+  <a class="btn {{ '' if show == 'active' else 'ghost' }}" href="{{ url_for('loans', show='active') }}">On loan</a>
+  <a class="btn {{ '' if show == 'all' else 'ghost' }}" href="{{ url_for('loans', show='all') }}">All history</a>
+</div>
+{% if loans %}
+<table>
+  <tr><th>Book</th><th>Member</th><th>Issued</th><th>Due</th><th>Status</th><th></th></tr>
+  {% for l in loans %}
+  <tr>
+    <td>{{ l.title }}</td><td>{{ l.name }}</td><td>{{ l.issued }}</td><td>{{ l.due }}</td>
+    <td>
+      {% if l.returned %}Returned {{ l.returned }}{% if l.fine %} <span class="tag none">fine {{ '%.2f' % l.fine }}</span>{% endif %}
+      {% elif l.due < today %}<span class="tag none">Overdue</span>
+      {% else %}<span class="tag">On loan</span>{% endif %}
+    </td>
+    <td>{% if not l.returned %}<form method="post" action="{{ url_for('return_book', id=l.id) }}"><button class="btn small">Return</button></form>{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}<p class="empty">No loans yet. Issue a book to start.</p>{% endif %}
+{% endblock %}
